@@ -39,7 +39,12 @@ export async function POST(req: NextRequest) {
     }
 
     const passwordHash = await bcrypt.hash(password, 12);
-    const emailVerifyToken = crypto.randomBytes(32).toString("hex");
+    const hasSmtp = !!(process.env.SMTP_HOST && process.env.SMTP_USER);
+
+    // If SMTP is configured, require email verification; otherwise auto-verify
+    const emailVerifyToken = hasSmtp
+      ? crypto.randomBytes(32).toString("hex")
+      : null;
 
     // Create user without partner assignment (needs claim approval)
     const user = await prisma.partnerUser.create({
@@ -49,6 +54,7 @@ export async function POST(req: NextRequest) {
         passwordHash,
         role: "partner_user",
         emailVerifyToken,
+        emailVerifiedAt: hasSmtp ? undefined : new Date(),
       },
     });
 
@@ -63,16 +69,22 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // Send verification email
-    const previewUrl = await sendVerificationEmail(
-      normalizedEmail,
-      emailVerifyToken
-    );
+    // Send verification email only if SMTP is configured
+    let previewUrl: string | null = null;
+    if (hasSmtp && emailVerifyToken) {
+      previewUrl = await sendVerificationEmail(
+        normalizedEmail,
+        emailVerifyToken
+      );
+    }
 
     return NextResponse.json({
       success: true,
-      message: "Registration successful. Please verify your email.",
-      previewUrl, // For dev — shows Ethereal preview URL
+      message: hasSmtp
+        ? "Registration successful. Please verify your email."
+        : "Registration successful! You can now sign in.",
+      previewUrl,
+      autoVerified: !hasSmtp,
     });
   } catch (error) {
     console.error("Registration error:", error);

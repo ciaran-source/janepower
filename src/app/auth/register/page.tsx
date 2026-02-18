@@ -46,9 +46,15 @@ export default function RegisterPage() {
       if (!res.ok) {
         setError(data.error || "Registration failed");
       } else {
-        setSuccess(
-          "Registration successful! Check your email for a verification link."
-        );
+        if (data.autoVerified) {
+          setSuccess(
+            "Registration successful! You can now sign in."
+          );
+        } else {
+          setSuccess(
+            "Registration successful! Check your email for a verification link."
+          );
+        }
         if (data.previewUrl) {
           setPreviewUrl(data.previewUrl);
         }
