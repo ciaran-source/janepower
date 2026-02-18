@@ -5,6 +5,8 @@ import { prisma } from "@/lib/prisma";
 import { slugify } from "@/lib/utils";
 import { z } from "zod";
 
+export const dynamic = "force-dynamic";
+
 async function requireAdmin() {
   const session = await getServerSession(authOptions);
   if (!session?.user || (session.user as any).role !== "admin") {

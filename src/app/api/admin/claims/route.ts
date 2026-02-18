@@ -4,6 +4,8 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { sendClaimApproval } from "@/lib/email";
 
+export const dynamic = "force-dynamic";
+
 async function requireAdmin() {
   const session = await getServerSession(authOptions);
   if (!session?.user || (session.user as any).role !== "admin") {
