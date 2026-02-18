@@ -1,0 +1,147 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model AccountManager {
+  id       String    @id @default(cuid())
+  name     String
+  email    String
+  phone    String
+  partners Partner[]
+}
+
+model Partner {
+  id                String    @id @default(cuid())
+  name              String
+  slug              String    @unique
+  status            String    @default("active") // active | pending | disabled
+  defaultReferralTag String   @default("")
+  accountManagerId  String?
+  accountManager    AccountManager? @relation(fields: [accountManagerId], references: [id])
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  users       PartnerUser[]
+  businesses  Business[]
+  deals       Deal[]
+  utmLinks    UTMLink[]
+  claims      PartnerClaim[]
+}
+
+model PartnerUser {
+  id              String    @id @default(cuid())
+  name            String
+  email           String    @unique
+  passwordHash    String?
+  partnerId       String?
+  partner         Partner?  @relation(fields: [partnerId], references: [id])
+  role            String    @default("partner_user") // partner_user | partner_admin | admin
+  emailVerifiedAt DateTime?
+  emailVerifyToken String?
+  createdAt       DateTime  @default(now())
+
+  claims PartnerClaim[]
+
+  // NextAuth fields
+  image    String?
+  accounts Account[]
+  sessions Session[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user PartnerUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String      @id @default(cuid())
+  sessionToken String      @unique
+  userId       String
+  expires      DateTime
+  user         PartnerUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Business {
+  id        String   @id @default(cuid())
+  name      String
+  partnerId String
+  partner   Partner  @relation(fields: [partnerId], references: [id])
+  createdAt DateTime @default(now())
+  deals     Deal[]
+}
+
+model Deal {
+  id                String    @id @default(cuid())
+  partnerId         String
+  partner           Partner   @relation(fields: [partnerId], references: [id])
+  businessId        String
+  business          Business  @relation(fields: [businessId], references: [id])
+  applicationType   String
+  applicationAmount Float
+  introducerFee     Float
+  stage             String    @default("new") // new | submitted | in_review | approved | funded | declined
+  status            String    @default("live") // live | completed | cancelled
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  completedAt       DateTime?
+
+  commissions Commission[]
+}
+
+model Commission {
+  id        String    @id @default(cuid())
+  dealId    String
+  deal      Deal      @relation(fields: [dealId], references: [id])
+  amountDue Float
+  status    String    @default("pipeline") // pipeline | due | paid
+  dueAt     DateTime?
+  createdAt DateTime  @default(now())
+}
+
+model PartnerClaim {
+  id              String   @id @default(cuid())
+  applicantUserId String
+  applicant       PartnerUser @relation(fields: [applicantUserId], references: [id])
+  partnerId       String
+  partner         Partner  @relation(fields: [partnerId], references: [id])
+  status          String   @default("pending") // pending | approved | rejected
+  createdAt       DateTime @default(now())
+}
+
+model UTMLink {
+  id        String   @id @default(cuid())
+  partnerId String
+  partner   Partner  @relation(fields: [partnerId], references: [id])
+  name      String
+  baseUrl   String   @default("https://swoopfunding.com/")
+  params    String   @default("{}") // JSON string
+  fullUrl   String
+  createdAt DateTime @default(now())
+}

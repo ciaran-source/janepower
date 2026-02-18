@@ -1,0 +1,26 @@
+partner_name,company_name,deal_count,application_type,application_amount,introducer_fee,application_stage
+Acme Financial Advisors,TechStart Ltd,2,Business Loan,150000,4500,funded
+Acme Financial Advisors,GreenGrow Co,1,Invoice Finance,80000,2400,approved
+Acme Financial Advisors,CloudNine Services,3,Asset Finance,200000,6000,submitted
+Acme Financial Advisors,Metro Retail Group,1,Business Loan,500000,15000,in_review
+Acme Financial Advisors,Sunrise Bakery,1,Merchant Cash Advance,30000,900,new
+Acme Financial Advisors,DataFlow Analytics,1,Business Loan,250000,7500,funded
+Sterling Partners,BlueWave Marketing,2,Business Loan,120000,3600,funded
+Sterling Partners,QuickFix Plumbing,1,Asset Finance,45000,1350,submitted
+Sterling Partners,Elite Catering,1,Invoice Finance,90000,2700,approved
+Sterling Partners,Nova Designs,2,Business Loan,175000,5250,in_review
+Sterling Partners,Bright Sparks Electric,1,Merchant Cash Advance,25000,750,new
+GlobalReach Consulting,Summit Construction,3,Business Loan,350000,10500,funded
+GlobalReach Consulting,Harmony Health Spa,1,Invoice Finance,60000,1800,in_review
+GlobalReach Consulting,Pixel Perfect Studios,2,Asset Finance,130000,3900,approved
+GlobalReach Consulting,Swift Logistics,1,Business Loan,220000,6600,submitted
+FinanceHub UK,Oakwood Properties,2,Business Loan,400000,12000,funded
+FinanceHub UK,Coastal Cafe Chain,1,Merchant Cash Advance,35000,1050,approved
+FinanceHub UK,ProTech Solutions,1,Business Loan,180000,5400,submitted
+FinanceHub UK,Garden World,1,Asset Finance,70000,2100,new
+FinanceHub UK,Urban Fitness,2,Invoice Finance,95000,2850,in_review
+Pinnacle Advisory,Riverside Restaurant,1,Business Loan,110000,3300,funded
+Pinnacle Advisory,Matrix IT Consulting,3,Business Loan,280000,8400,submitted
+Pinnacle Advisory,Silver Screen Cinema,1,Asset Finance,160000,4800,approved
+Pinnacle Advisory,FreshFields Organic,1,Merchant Cash Advance,40000,1200,declined
+Pinnacle Advisory,Titan Manufacturing,2,Business Loan,450000,13500,in_review
